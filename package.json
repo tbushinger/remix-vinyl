@@ -1,0 +1,27 @@
+{
+  "name": "remix-vinyl",
+  "version": "1.0.0",
+  "description": "virtaul file/document storage system",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tbushinger/remix-vinyl.git"
+  },
+  "author": "Anthony J Bushinger",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tbushinger/remix-vinyl/issues"
+  },
+  "homepage": "https://github.com/tbushinger/remix-vinyl#readme",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "fs-extra": "^6.0.1",
+    "hapi": "^17.x",
+    "lodash": "^4.17.10",
+    "uuid": "^3.2.1"
+  }
+}
