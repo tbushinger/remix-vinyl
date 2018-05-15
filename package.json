@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./index",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "istanbul cover ./node_modules/.bin/_mocha ./test/**/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,9 @@
     "hapi": "^17.x",
     "lodash": "^4.17.10",
     "uuid": "^3.2.1"
+  },
+  "devDependencies": {
+    "istanbul": "^0.4.5",
+    "mocha": "^5.1.1"
   }
 }
