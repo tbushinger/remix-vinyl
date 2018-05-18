@@ -60,7 +60,7 @@ export function extractHeader(model: DocType) : DocType {
 }
 
 function _toLowerCase(text: string) {
-    return ((text || '') + '').toLowerCase();
+    return (text + '').toLowerCase();
 }
 
 function _includes(c: string,v: string) {
@@ -70,21 +70,34 @@ function _includes(c: string,v: string) {
 const ops = [
     { op: 'eq', fn: (c: any,v: any) => c === v },
     { op: 'neq', fn: (c: any,v: any) => c != v },
-    { op: 'lt', fn: (c: any,v: any) => v < c },
-    { op: 'lte', fn: (c: any,v: any) => v <= c },
-    { op: 'gt', fn: (c: any,v: any) => v > c },
-    { op: 'gte', fn: (c: any,v: any) => v >= c },
+    { op: 'lt', fn: (c: any,v: any) => c < v },
+    { op: 'lte', fn: (c: any,v: any) => c <= v },
+    { op: 'gt', fn: (c: any,v: any) => c > v },
+    { op: 'gte', fn: (c: any,v: any) => c >= v },
     { op: 'isnull', fn: (c: any) => c == null },
     { op: 'notnull', fn:  (c: any) => c != null },    
     { op: 'incl', fn: _includes }
 ];
 
-function getOp(op: string) : any {
+function _getOp(op: string) : any {
     const found = ops.find(o => o.op === op);
-    return (found) ? found.fn : getOp('eq');
+    return (found) ? found.fn : _getOp('eq');
+}
+
+function _castValue(compare: any, value: any) : any {
+    if (lodash.isString(compare)) {
+        return value + '';
+    } else if (lodash.isNumber(compare)) {
+        return parseInt(value);
+    } else {
+        return value;
+    }
 }
 
 export function filterBy(list: DocType[], path: string, value: any, op: string = 'eq') : DocType[] {
-    return list.filter(item => 
-        getOp(op)(lodash.get(item, path, null), value));
+    return list.filter((item) => {
+        const compare = lodash.get(item, path, null);
+        const castVal = _castValue(compare, value);
+        return _getOp(op)(compare, castVal);
+    });
 }
