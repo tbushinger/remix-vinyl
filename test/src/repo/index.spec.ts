@@ -1,6 +1,6 @@
 import { describe, it } from 'mocha';
 import assert from 'assert';
-import createRepo from '../../../src/repo/factory';
+import createRepo from '../../../src/repo';
 import { RepoType,  Repo } from '../../../src/repo/repo';
 import FileRepo from '../../../src/repo/implementation/file.system';
 
