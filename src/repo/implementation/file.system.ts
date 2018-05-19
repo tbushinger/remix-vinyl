@@ -23,9 +23,8 @@ export default class FileRepo implements Repo {
     }
 
     save(payloadType: string, payload: DocType) : Promise<DocType> {
-        const id = (isString(payload)) ? JSON.parse(payload).id : payload.id;
-        const filePath = this.createFilePath(payloadType, this.createFileName(id));
-        return outputFile(filePath, (isString(payload)) ? payload : JSON.stringify(payload))
+        const filePath = this.createFilePath(payloadType, this.createFileName(payload.id));
+        return outputFile(filePath, JSON.stringify(payload))
             .then(() => payload);
     }
 
