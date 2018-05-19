@@ -58,6 +58,7 @@ typings/
 .env
 
 _data
+_testData
 package-lock.json
 DS_store
 dist

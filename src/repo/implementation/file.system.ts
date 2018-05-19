@@ -22,26 +22,25 @@ export default class FileRepo implements Repo {
         this.rootPath = rootPath;
     }
 
-    save(payloadType: string, payload: DocType) : DocType {
+    save(payloadType: string, payload: DocType) : Promise<DocType> {
         const id = (isString(payload)) ? JSON.parse(payload).id : payload.id;
         const filePath = this.createFilePath(payloadType, this.createFileName(id));
-        return outputFile(filePath, (isString(payload)) ? payload : JSON.stringify(payload));
+        return outputFile(filePath, (isString(payload)) ? payload : JSON.stringify(payload))
+            .then(() => payload);
     }
 
-    get(payloadType: string, id: string) : DocType {
+    get(payloadType: string, id: string) : Promise<DocType> {
         const filePath = this.createFilePath(payloadType, this.createFileName(id));
         return readFile(filePath, 'utf8').then((text: string) => JSON.parse(text));
     }
 
-    remove(payloadType: string, id: string) : boolean {
+    remove(payloadType: string, id: string) : Promise<boolean> {
         const filePath = this.createFilePath(payloadType, this.createFileName(id));
-        unlink(filePath);
-        return true;
+        return unlink(filePath).then(() => true);
     }
 
-    list(payloadType: string, fnMap: any) : DocType[] {
+    list(payloadType: string) : Promise<DocType[]> {
         return readdir(`${this.rootPath}/${payloadType}`).then((items: string[]) => 
-            Promise.mapSeries(items, item => this.get(payloadType, item.split(/\./)[0]))
-                .then(items => items.map(fnMap)));
+            Promise.mapSeries(items, item => this.get(payloadType, item.split(/\./)[0])));
     }
 }
