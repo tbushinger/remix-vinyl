@@ -4,8 +4,6 @@ import { RepoType,  Repo } from '../../../../src/repo/repo';
 import { create } from '../../../../src/model/document';
 import FileRepo from '../../../../src/repo/implementation/file.system';
 
-const mock = require('mock-require');
-
 const repo: Repo = new FileRepo('./_testData')
 const testModel = create('testmodel','userA',{},{});
 
