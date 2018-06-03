@@ -54,7 +54,7 @@ describe('document service - implementation', function() {
 
   it('filterBy', async function() {
     const result: DocType[] = await service.filterBy(session, documentType, 'meta.createdBy', null, 'notnull');
-    console.dir(result, { colors: true });
+    //console.dir(result, { colors: true });
     assert(result.length != undefined && result.length > 0);
   });
 });
