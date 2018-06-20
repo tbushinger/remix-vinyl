@@ -7,7 +7,9 @@
     "start": "node ./dist/index",
     "test": "nyc mocha",
     "build-ts": "tsc",
-    "watch-ts": "tsc -w"
+    "watch-ts": "tsc -w",
+    "build-image": "docker build . -t tbushinger/remix-vinyl",
+    "test-image": "docker-compose run --service-ports documents"
   },
   "nyc": {
     "include": [
