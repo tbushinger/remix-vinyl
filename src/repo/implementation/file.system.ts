@@ -1,7 +1,6 @@
 import Promise from 'bluebird';
 import fs from 'fs-extra';
 import Path from 'path';
-import { isString } from 'lodash';
 import { DocType } from 'document';
 import { Repo } from '../repo';
 
