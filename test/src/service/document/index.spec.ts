@@ -7,20 +7,21 @@ import { Repo } from "../../../../src/repo/repo";
 import createMockRepo from "./mocks/repo";
 
 const repo: Repo = createMockRepo();
+const indexRepo: Repo = createMockRepo();
 let service : DocumentService;
 
 describe('document - index', function() { 
   describe('createDocumentService', function() {
     describe('first call', function() {
       it('Should return new DocumentService Object', async function() {
-        service = createDocumentService(repo);
+        service = createDocumentService(repo, indexRepo);
         assert(service instanceof DocumentServiceImpl);
       });
     });
     
     describe('second call', function() {
       it('Should return an existing DocumentService Object', async function() {
-        service = createDocumentService(repo);
+        service = createDocumentService(repo, indexRepo);
         assert(service instanceof DocumentServiceImpl);
       });
     });

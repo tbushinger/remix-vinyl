@@ -1,5 +1,4 @@
 import assert from "assert";
-import BluebirdPromise from "bluebird";
 import { describe, it } from "mocha";
 import createDocumentService from "../../../../../src/service/document";
 import DocumentService from "../../../../../src/service/document/document";
@@ -9,7 +8,8 @@ import { Repo } from "../../../../../src/repo/repo";
 import createMockRepo from "../mocks/repo";
 
 const repo: Repo = createMockRepo();
-const service : DocumentService = createDocumentService(repo);
+const indexRepo: Repo = createMockRepo();
+const service : DocumentService = createDocumentService(repo, indexRepo);
 const session : Session = { userid: 'testUser' };
 const documentPayload : any = { body: {}, head: {} };
 const documentType: string = 'mydoctype';

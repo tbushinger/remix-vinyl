@@ -19,18 +19,23 @@ const app = express();
 
 // Env vars
 dotenv.config({ path: ".env" });
-app.set("port",          process.env.PORT          || 3000);
-app.set("default-user",  process.env.DEFAULT_USER  || 'system');
-app.set("doc-repo-type", process.env.DOC_REPO_TYPE || 'fileSystem');
-app.set("doc-repo-dir",  process.env.DOC_REPO_DIR  || '_data');
+app.set("port",           process.env.PORT           || 3000);
+app.set("default-user",   process.env.DEFAULT_USER   || 'system');
+app.set("doc-repo-type",  process.env.DOC_REPO_TYPE  || 'fileSystem');
+app.set("doc-repo-dir",   process.env.DOC_REPO_DIR   || '_data');
+app.set("doc-index-type", process.env.DOC_INDEX_TYPE || 'fileSystem');
+app.set("doc-index-dir",  process.env.DOC_INDEX_DIR  || '_index');
 
 // Setup Repositories/Services
-const repoType = app.get("doc-repo-type");
-// TOOD: add more supported drivers
-const documentRepo : Repo = (repoType === 'fileSystem') ?
+const docRepoType = app.get("doc-repo-type");
+const documentRepo : Repo = (docRepoType === 'fileSystem') ?
   createRepo(RepoType.FileSystem, app.get("doc-repo-dir")) : null;
 
-const documentService : DocumentService = createDocumentService(documentRepo);  
+const docIndexType = app.get("doc-index-type");
+const indexRepo : Repo = (docIndexType === 'fileSystem') ?
+  createRepo(RepoType.FileSystem, app.get("doc-index-dir")) : null;
+
+const documentService : DocumentService = createDocumentService(documentRepo, indexRepo);  
 
 // Setup Route handlers
 const documentRoutes : DocumentRoutes = createDocumentRoutes(documentService);

@@ -56,6 +56,7 @@ typings/
 
 _data
 _testData
+_index
 package-lock.json
 DS_store
 dist
