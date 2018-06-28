@@ -2,6 +2,7 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import express from 'express';
 import errorHandler from "errorhandler";
+import { MongoClient } from 'mongodb';
 
 import sessionMW from "./middleware/session";
 import requestMW from "./middleware/request";

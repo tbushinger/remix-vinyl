@@ -10,5 +10,6 @@ export interface Repo {
 
 export enum RepoType {
     FileSystem,
-    Memory
+    Memory,
+    MongoDb
 }

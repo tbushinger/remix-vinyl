@@ -2,18 +2,39 @@ import { describe, it } from 'mocha';
 import assert from 'assert';
 import { Repo } from '../../../../src/repo/repo';
 import { create } from '../../../../src/model/document';
-import FileRepo from '../../../../src/repo/implementation/file.system';
+import MongoDbRepo from '../../../../src/repo/implementation/mongodb';
+import createMockMongoClient from './mocks/mongoClient';
 
-const repo: Repo = new FileRepo('./_testData')
+const mockClient = createMockMongoClient();
+const repo: Repo = new MongoDbRepo(mockClient, 'mongodb://localhost:27017', 'test');
 const testModel = create('testmodel','userA',{},{});
+const testModelFail = create('testmodel','userA',{ fail: true },{});
 
-describe('repo - file.system', function() {
-  
+describe('repo - mongodb', function() {
+  describe('connect', function() {
+    it('error condition should throw err', function(done) {
+      const badRepo: Repo = new MongoDbRepo(mockClient, null, 'test');
+      badRepo.save(testModel.schema.type, testModel).catch((err) => {
+        //console.log(err);
+        assert(err);
+        done();
+      })
+    });
+  });
+   
   describe('create', function() {
     it('Should return a DocType Object', async function() {
       const result = await repo.save(testModel.schema.type, testModel);
       //console.dir(result, { colors: true });
       assert(result === testModel);
+    });
+
+    it('Should return an error', function(done) {
+      repo.save(testModel.schema.type, testModelFail).catch((error) => {
+        //console.log(error);
+        assert(error);
+        done();
+      })
     });
   });
 

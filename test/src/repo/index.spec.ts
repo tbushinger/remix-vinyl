@@ -4,6 +4,7 @@ import createRepo from '../../../src/repo';
 import { RepoType, Repo } from '../../../src/repo/repo';
 import FileRepo from '../../../src/repo/implementation/file.system';
 import MemRepo from '../../../src/repo/implementation/memory';
+import MongoDbRepo from '../../../src/repo/implementation/mongodb';
 
 describe('repo - factory', function () {
   describe('create File System Repo', function () {
@@ -19,6 +20,14 @@ describe('repo - factory', function () {
       const result: Repo = createRepo(RepoType.Memory);
       //console.dir(result, { colors: true });
       assert(result instanceof MemRepo)
+    });
+  });
+
+  describe('create Mongo Db Repo', function () {
+    it('Should return an Monge Db Repo Object', function () {
+      const result: Repo = createRepo(RepoType.MongoDb);
+      //console.dir(result, { colors: true });
+      assert(result instanceof MongoDbRepo)
     });
   });
 });

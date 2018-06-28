@@ -1,10 +1,18 @@
 version: '2.1'
 
 services:
+  mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - 3031:3031
+
   documents:
+    depends_on:
+      - mongodb
     image: tbushinger/remix-vinyl
     build: .
     environment:
       NODE_ENV: production
     ports:
-      - 3000:3000
+      - 27017:27017
