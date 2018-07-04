@@ -5,7 +5,6 @@ node_js:
 jobs:
   include:
     - stage: test
-      script: npm install -g typescript
       script: npm test
     - stage: build
       script: npm run build-ts
