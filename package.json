@@ -9,6 +9,7 @@
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "build-image": "docker build . -t tbushinger/remix-vinyl",
+    "push-image": "docker push tbushinger/remix-vinyl",
     "test-image": "docker-compose run --service-ports documents",
     "cleanup-images": "docker rm `docker ps --no-trunc -aq`"
   },

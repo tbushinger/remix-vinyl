@@ -11,3 +11,5 @@ jobs:
     - stage: build-image
       script: npm run build-ts
       script: npm run build-image
+      script: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      script: npm run push-image
