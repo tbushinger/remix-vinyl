@@ -10,7 +10,9 @@
     "watch-ts": "tsc -w",
     "build-image": "docker build . -t tbushinger/remix-vinyl",
     "push-image": "docker push tbushinger/remix-vinyl",
-    "test-image": "docker-compose run --service-ports documents",
+    "test-image": "docker run --name remix-vinyl -p 3000:3000 -d tbushinger/remix-vinyl",
+    "stop-container": "docker stop remix-vinyl",
+    "remove-container": "docker rm remix-vinyl",
     "cleanup-images": "docker rm `docker ps --no-trunc -aq`"
   },
   "nyc": {
