@@ -6,16 +6,17 @@ node_js:
 
 jobs:
   include:
-    - stage: test
-      script: npm test
-    - stage: build-image
-      script: 
-       - npm run build-ts
-       - npm run build-image
-       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-       - npm run push-image
-    - stage: test-image
+    #- stage: test
+    #  script: npm test
+    #- stage: build-image
+    #  script: 
+    #   - npm run build-ts
+    #   - npm run build-image
+    #   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    #   - npm run push-image
+    - stage: test-integration
       script: 
        - npm run test-image
+       - sh ./test/integration/test.sh
        - npm run stop-container
-       - npm run remove-container 
+       - npm run remove-container
