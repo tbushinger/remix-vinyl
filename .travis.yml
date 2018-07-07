@@ -17,6 +17,7 @@ jobs:
     - stage: test-integration
       script: 
        - npm run test-image
+       - cd test/integration
        - sh ./test/integration/test.sh
        - npm run stop-container
        - npm run remove-container
