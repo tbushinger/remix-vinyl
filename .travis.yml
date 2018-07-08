@@ -18,6 +18,7 @@ jobs:
       script: 
        - npm run test-image
        - cd test/integration
+       - docker ps
        - sh ./test.sh
        - npm run stop-container
        - npm run remove-container
