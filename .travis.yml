@@ -19,4 +19,5 @@ jobs:
        - cd test/integration
        - docker-compose up -d remix
        - docker-compose up harness
+       - docker-compose logs
        - docker-compose down
