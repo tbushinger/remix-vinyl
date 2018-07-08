@@ -3,7 +3,6 @@ version: '2.1'
 services:
   remix:
     image: tbushinger/remix-vinyl
-    build: .
     environment:
       NODE_ENV: production
     ports:
