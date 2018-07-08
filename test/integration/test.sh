@@ -2,7 +2,9 @@
 DOC_TYPE=myDocType
 DOC_USER=myDocUser
 FIXTURES_DIR=./fixtures
-URL=http://localhost:3000/documents
+URL=http://remix:3000/documents
+
+sleep 5s
 
 curl -d "@${FIXTURES_DIR}/post.json" \
   -H "userid: ${DOC_USER}" \

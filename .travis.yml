@@ -16,9 +16,7 @@ jobs:
     #   - npm run push-image
     - stage: test-integration
       script: 
-       - npm run test-image
        - cd test/integration
-       - docker ps
-       - sh ./test.sh
-       - npm run stop-container
-       - npm run remove-container
+       - docker-compose up remix -d
+       - docker-compose up harness
+       - docker-compose down

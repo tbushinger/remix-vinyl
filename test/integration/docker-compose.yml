@@ -1,0 +1,17 @@
+version: '2.1'
+
+services:
+  remix:
+    image: tbushinger/remix-vinyl
+    build: .
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3000:3000
+
+  harness:
+    build: ./harness
+    command: sh ./scripts/test.sh
+    volumes:
+     - ./:/scripts
+    
