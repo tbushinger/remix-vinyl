@@ -10,7 +10,7 @@ services:
 
   harness:
     build: ./harness
-    command: sh ./scripts/test.sh
+    command: sh cd scripts; test.sh
     volumes:
      - ./:/scripts
     
