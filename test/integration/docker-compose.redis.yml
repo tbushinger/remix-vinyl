@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  remix:
+   environment:
+      DOC_INDEX_TYPE: redis
+      DOC_INDEX_HOST: redis
+
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - 6379:6379

@@ -59,7 +59,7 @@ if (docIndexType === 'fileSystem') {
   indexRepo = createRepo(RepoType.MongoDb, MongoClient, url, db);
 } else if (docIndexType === 'redis') {
   const url: string = `redis://${app.get('doc-index-host')}:${app.get('doc-index-port')}`;
-  documentRepo = createRepo(RepoType.Redis, redis, url);
+  indexRepo = createRepo(RepoType.Redis, redis, url);
 } else { // memory
   indexRepo = createRepo(RepoType.Memory);
 };

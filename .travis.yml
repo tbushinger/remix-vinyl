@@ -18,3 +18,7 @@ jobs:
       script:
        - cd test/integration
        - sh ./run.sh
+    - stage: test-integration-mongo-redis
+      script:
+       - cd test/integration
+       - sh ./run-mongo-redis.sh

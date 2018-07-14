@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  remix:
+   environment:
+      DOC_REPO_TYPE: mongodb
+      DOC_REPO_HOST: mongodb
+
+  mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
