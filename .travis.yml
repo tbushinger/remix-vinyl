@@ -6,18 +6,18 @@ node_js:
 
 jobs:
   include:
-    #- stage: test
-    #  script: npm test
-    #- stage: build-image
-    #  script: 
-    #   - npm run build-ts
-    #   - npm run build-image
-    #   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    #   - npm run push-image
+    - stage: test
+      script: npm test
+    - stage: build-image
+      script: 
+       - npm run build-ts
+       - npm run build-image
+       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+       - npm run push-image
     - stage: test-integration
-      before_script:
+      script:
        - cd test/integration
        - docker-compose up -d remix
-      script: 
        - docker-compose up harness
+       - docker-compose logs
        - docker-compose down
