@@ -37,7 +37,6 @@ const client = {
 }
 
 export default function() {
-    console.log('HERE')
     return {
         connect: (url: string, callback: any) => {
             if (!(url)) {
