@@ -9,8 +9,6 @@ services:
       - 3000:3000
 
   harness:
-    build: ./harness
-    command: sh ./scripts/test.sh
-    volumes:
-     - ./:/scripts
-    
+    build: .
+    environment:
+      TARGET_SERVER_URL: http://remix:3000/documents   
