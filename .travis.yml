@@ -17,7 +17,4 @@ jobs:
     - stage: test-integration
       script:
        - cd test/integration
-       - docker-compose up -d remix
-       - docker-compose up harness
-       - docker-compose logs
-       - docker-compose down
+       - sh ./run.sh
