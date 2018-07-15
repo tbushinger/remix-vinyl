@@ -8,6 +8,7 @@ import sessionMW from "./middleware/session";
 import requestMW from "./middleware/request";
 
 import { RepoType, Repo } from "./repo/repo";
+import { Session } from "./types/session";
 import createRepo from "./repo";
 
 import DocumentService from "./service/document/document";
@@ -19,18 +20,20 @@ import { createDocumentRoutes } from "./routes";
 const app = express();
 
 // Env vars
-app.set("port",           process.env.PORT           || 3000);
-app.set("default-user",   process.env.DEFAULT_USER   || 'system');
-app.set("doc-repo-type",  process.env.DOC_REPO_TYPE  || 'memory');
-app.set("doc-repo-dir",   process.env.DOC_REPO_DIR   || '_data');
-app.set("doc-repo-host",  process.env.DOC_REPO_HOST  || 'localhost');
-app.set("doc-repo-port",  process.env.DOC_REPO_PORT  || '27017');
-app.set("doc-repo-db",    process.env.DOC_REPO_DB    || 'rmxStorage');
+app.set("port", process.env.PORT || 3000);
+app.set("default-user", process.env.DEFAULT_USER || 'system');
+app.set("doc-repo-type", process.env.DOC_REPO_TYPE || 'memory');
+app.set("doc-repo-dir", process.env.DOC_REPO_DIR || '_data');
+app.set("doc-repo-host", process.env.DOC_REPO_HOST || 'localhost');
+app.set("doc-repo-port", process.env.DOC_REPO_PORT || '27017');
+app.set("doc-repo-db", process.env.DOC_REPO_DB || 'rmxStorage');
 app.set("doc-index-type", process.env.DOC_INDEX_TYPE || 'memory');
-app.set("doc-index-dir",  process.env.DOC_INDEX_DIR  || '_index');
+app.set("doc-index-dir", process.env.DOC_INDEX_DIR || '_index');
 app.set("doc-index-host", process.env.DOC_INDEX_HOST || 'localhost');
 app.set("doc-index-port", process.env.DOC_INDEX_PORT || '6379');
-app.set("doc-index-db",   process.env.DOC_INDEX_DB   || 'rmxIndex');
+app.set("doc-index-db", process.env.DOC_INDEX_DB || 'rmxIndex');
+app.set("connect-tries", process.env.CONNECT_TRIES || '10');
+app.set("retry-interval", process.env.RETRY_INTERVAL || '1000');
 
 // Setup Repositories/Services
 // TODO: combine into single method
@@ -64,9 +67,7 @@ if (docIndexType === 'fileSystem') {
   indexRepo = createRepo(RepoType.Memory);
 };
 
-// TODO: Create an index loader function for cases where the storage is mongo but the indexes
 // are in memory or redis
-
 const documentService: DocumentService = createDocumentService(documentRepo, indexRepo);
 
 // Setup Route handlers
@@ -98,5 +99,33 @@ documentsRouter.delete('/:documentType/:documentId',
 
 app.use('/documents', documentsRouter);
 
-// Start App
-app.listen(app.get("port"));
+// Start App when indexes have been loaded
+const loadSession: Session = { userid: app.get("default-user") };
+let tries: number = parseInt(app.get("connect-tries"));
+let retryInterval: number = parseInt(app.get("retry-interval"));
+
+function loadIndexes() {
+  if (tries === 0) {
+    throw new Error("Failed to connect to data stores and load indexes!")
+  }
+
+  console.log(`Loading indexes . . .`);
+
+  documentService.loadIndexes(loadSession)
+    .then((count) => {
+      console.log(`${count} Document indexes succesfully loaded!`);
+      console.log(`Starting app...`);
+
+      app.listen(app.get("port"));
+    })
+    .catch(() => {
+      tries--;
+      console.log("connection not ready!");
+      console.log(`Number of retries: ${tries}`);
+      console.log(`Reconnect in ${retryInterval}ms . . .`);
+      console.log("");
+      setTimeout(loadIndexes, retryInterval);
+    });
+}
+
+loadIndexes();

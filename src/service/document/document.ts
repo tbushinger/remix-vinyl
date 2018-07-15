@@ -10,4 +10,5 @@ export default interface DocumentService {
     list(session: Session, documentType: string) : Promise<DocType[]>,
     remove(session: Session, documentType: string, documentId: string) : Promise<boolean>,
     filterBy(session: Session, documentType: string, path: string, value: any, op: string) : Promise<DocType[]>
+    loadIndexes(session: Session) : Promise<number>
 }

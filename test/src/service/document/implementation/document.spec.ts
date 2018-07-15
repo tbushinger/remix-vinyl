@@ -22,6 +22,12 @@ describe('document service - implementation', function() {
     assert(result);
   });
 
+  it('loadIndexes', async function() {
+    const result: number = await service.loadIndexes(session);
+    //console.log(result);
+    assert(result > 0);
+  });
+
   it('update', async function() {
     const result: DocType = await service.update(session, documentType, documentId, documentPayload);
     //console.dir(result, { colors: true });
