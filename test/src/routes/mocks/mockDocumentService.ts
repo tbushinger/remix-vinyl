@@ -49,4 +49,10 @@ export default class MockDocumentService implements DocumentService {
             resolve([this.doc]);
         });
     }    
+
+    loadIndexes(session: Session): BluebirdPromise<number> {
+        return new BluebirdPromise((resolve) => {
+            resolve(0);
+        });
+    }
 }

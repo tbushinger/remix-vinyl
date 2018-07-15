@@ -1,5 +1,4 @@
 import assert from "assert";
-import BluebirdPromise from "bluebird";
 import { describe, it } from "mocha";
 import { DocType } from "../../../src/types/document";
 import { Session } from "../../../src/types/session";
