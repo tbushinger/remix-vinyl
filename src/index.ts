@@ -19,55 +19,41 @@ import { createDocumentRoutes } from "./routes";
 
 const app = express();
 
-// Env vars
-app.set("port", process.env.PORT || 3000);
-app.set("default-user", process.env.DEFAULT_USER || 'system');
-app.set("doc-repo-type", process.env.DOC_REPO_TYPE || 'memory');
-app.set("doc-repo-dir", process.env.DOC_REPO_DIR || '_data');
-app.set("doc-repo-host", process.env.DOC_REPO_HOST || 'localhost');
-app.set("doc-repo-port", process.env.DOC_REPO_PORT || '27017');
-app.set("doc-repo-db", process.env.DOC_REPO_DB || 'rmxStorage');
-app.set("doc-index-type", process.env.DOC_INDEX_TYPE || 'memory');
-app.set("doc-index-dir", process.env.DOC_INDEX_DIR || '_index');
-app.set("doc-index-host", process.env.DOC_INDEX_HOST || 'localhost');
-app.set("doc-index-port", process.env.DOC_INDEX_PORT || '6379');
-app.set("doc-index-db", process.env.DOC_INDEX_DB || 'rmxIndex');
-app.set("connect-tries", process.env.CONNECT_TRIES || '10');
-app.set("retry-interval", process.env.RETRY_INTERVAL || '1000');
+// Env vars and defaults
+const port = process.env.PORT || 3000;
+const defaultUser = process.env.DEFAULT_USER || 'system';
+const docRepoType = process.env.DOC_REPO_TYPE || 'memory';
+const docRepoDir = process.env.DOC_REPO_DIR || '_data';
+const docRepoHost = process.env.DOC_REPO_HOST || 'localhost';
+const docRepoPort = process.env.DOC_REPO_PORT || '27017';
+const docRepoDb = process.env.DOC_REPO_DB || 'rmxStorage';
+const docIndexType = process.env.DOC_INDEX_TYPE || 'memory';
+const docIndexDir = process.env.DOC_INDEX_DIR || '_index';
+const docIndexHost = process.env.DOC_INDEX_HOST || 'localhost';
+const docIndexPort = process.env.DOC_INDEX_PORT || '6379';
+const docIndexDb = process.env.DOC_INDEX_DB || 'rmxIndex';
+const connectTries = process.env.CONNECT_TRIES || '10';
+const retryInterval = process.env.RETRY_INTERVAL || '1000';
 
-// Setup Repositories/Services
-// TODO: combine into single method
-const docRepoType = app.get("doc-repo-type");
-let documentRepo: Repo;
-if (docRepoType === 'fileSystem') {
-  documentRepo = createRepo(RepoType.FileSystem, app.get("doc-repo-dir"));
-} else if (docRepoType === 'mongodb') {
-  const url: string = `mongodb://${app.get('doc-repo-host')}:${app.get('doc-repo-port')}`;
-  const db: string = app.get('doc-repo-db');
-  documentRepo = createRepo(RepoType.MongoDb, MongoClient, url, db);
-} else if (docRepoType === 'redis') {
-  const url: string = `redis://${app.get('doc-repo-host')}:${app.get('doc-repo-port')}`;
-  documentRepo = createRepo(RepoType.Redis, redis, url);
-} else { // memory
-  documentRepo = createRepo(RepoType.Memory);
+// Setup Repositories
+function setupRepo(type: string, dir: string, host: string, port: string, db: string): Repo {
+  if (type === 'fileSystem') {
+    return createRepo(RepoType.FileSystem, dir);
+  } else if (type === 'mongodb') {
+    const url: string = `mongodb://${host}:${port}`;
+    return createRepo(RepoType.MongoDb, MongoClient, url, db);
+  } else if (type === 'redis') {
+    const url: string = `redis://${host}:${port}`;
+    return createRepo(RepoType.Redis, redis, url);
+  } else { // memory
+    return createRepo(RepoType.Memory);
+  }
 }
 
-const docIndexType = app.get("doc-index-type");
-let indexRepo: Repo;
-if (docIndexType === 'fileSystem') {
-  indexRepo = createRepo(RepoType.FileSystem, app.get("doc-index-dir"));
-} else if (docIndexType === 'mongodb') {
-  const url: string = `mongodb://${app.get('doc-index-host')}:${app.get('doc-index-port')}`;
-  const db: string = app.get('doc-index-db');
-  indexRepo = createRepo(RepoType.MongoDb, MongoClient, url, db);
-} else if (docIndexType === 'redis') {
-  const url: string = `redis://${app.get('doc-index-host')}:${app.get('doc-index-port')}`;
-  indexRepo = createRepo(RepoType.Redis, redis, url);
-} else { // memory
-  indexRepo = createRepo(RepoType.Memory);
-};
+const documentRepo: Repo = setupRepo(docRepoType, docRepoDir, docRepoHost, docRepoPort, docRepoDb);
+const indexRepo: Repo = setupRepo(docIndexType, docIndexDir, docIndexHost, docIndexPort, docIndexDb);
 
-// are in memory or redis
+// Setup Services
 const documentService: DocumentService = createDocumentService(documentRepo, indexRepo);
 
 // Setup Route handlers
@@ -77,7 +63,7 @@ const documentRoutes: DocumentRoutes = createDocumentRoutes(documentService);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(errorHandler());
-app.use(sessionMW({ userId: app.get("default-user") }));
+app.use(sessionMW(defaultUser));
 
 // Setup Routes
 const documentsRouter = express.Router({ mergeParams: true });
@@ -100,9 +86,9 @@ documentsRouter.delete('/:documentType/:documentId',
 app.use('/documents', documentsRouter);
 
 // Start App when indexes have been loaded
-const loadSession: Session = { userid: app.get("default-user") };
-let tries: number = parseInt(app.get("connect-tries"));
-let retryInterval: number = parseInt(app.get("retry-interval"));
+const loadSession: Session = { userid: defaultUser };
+let tries: number = parseInt(connectTries);
+let iRetryInterval: number = parseInt(retryInterval);
 
 function loadIndexes() {
   if (tries === 0) {
@@ -116,7 +102,7 @@ function loadIndexes() {
       console.log(`${count} Document indexes succesfully loaded!`);
       console.log(`Starting app...`);
 
-      app.listen(app.get("port"));
+      app.listen(port);
     })
     .catch(() => {
       tries--;
@@ -124,7 +110,7 @@ function loadIndexes() {
       console.log(`Number of retries: ${tries}`);
       console.log(`Reconnect in ${retryInterval}ms . . .`);
       console.log("");
-      setTimeout(loadIndexes, retryInterval);
+      setTimeout(loadIndexes, iRetryInterval);
     });
 }
 
