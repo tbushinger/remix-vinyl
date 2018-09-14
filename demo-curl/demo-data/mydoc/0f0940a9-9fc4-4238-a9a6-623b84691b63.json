@@ -1,0 +1,19 @@
+{
+    "id": "0f0940a9-9fc4-4238-a9a6-623b84691b63",
+    "schema": {
+        "version": "1.0.0",
+        "type": "mydoc"
+    },
+    "meta": {
+        "version": "1.0.0",
+        "createdOn": "2018-09-11T13:51:08.819Z",
+        "updatedOn": "2018-09-11T13:51:08.819Z"
+    },
+    "head": {
+        "indexedId": 1,
+        "indexedName": "myNameIndex"
+    },
+    "body": {
+        "documentData": "Some Document Data"
+    }
+}

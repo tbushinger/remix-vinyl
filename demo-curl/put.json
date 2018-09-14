@@ -1,0 +1,9 @@
+{
+    "head": {
+        "indexedId": 2,
+        "indexedName": "myUpdateNameIndex"
+    },
+    "body": {
+        "documentData": "Some Updated Document Data"
+    }
+}

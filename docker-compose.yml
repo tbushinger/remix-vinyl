@@ -1,18 +1,32 @@
-version: '2.1'
+version: '3'
 
 services:
-  mongodb:
-    image: mongo
-    restart: always
-    ports:
-      - 3031:3031
-
-  documents:
-    depends_on:
-      - mongodb
+  remix-vinyl:
     image: tbushinger/remix-vinyl
-    build: .
     environment:
-      NODE_ENV: production
+     # Internal Node App Settings
+     - NODE_ENV=production
+     - PORT=3000
+     - DEFAULT_USER=system
+     # Document Database settings (type could be 'memory', 'fileSystem', 'mongodb', or 'redis')
+     - DOC_REPO_TYPE=memory
+     # Document directory (if type if filesystem) 
+     - DOC_REPO_DIR=_data
+     - DOC_REPO_HOST=localhost
+     - DOC_REPO_PORT=27017
+     # Storage database (if type is 'mongodb')
+     - DOC_REPO_DB=rmxStorage
+     # Index Database settings
+     - DOC_INDEX_TYPE=memory
+     # Document directory (if type if filesystem)
+     - DOC_INDEX_DIR=_index
+     - DOC_INDEX_HOST=localhost
+     - DOC_INDEX_PORT=6379
+     - DOC_INDEX_DB=rmxIndex
+     # Connect tries to connect to external resources such as mongodb and redis
+     # is since the while the container start together, the services inside may need time to initialize
+     - CONNECT_TRIES=10
+     # wait time in ms
+     - RETRY_INTERVAL=1000
     ports:
-      - 27017:27017
+     - 3000:3000

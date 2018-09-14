@@ -54,7 +54,7 @@ export default class DocumentServiceImpl implements DocumentService {
 
     remove(session: Session, documentType: string, documentId: string): Promise<boolean> {
         return this.repo.remove(documentType, documentId)
-            .then(() => this.repo.remove(createIndexName(DOCUMENT_MANIFEST), documentId))
+            .then(() => this.repo.remove(DOCUMENT_MANIFEST, documentId))
             .then(() => this.indexRepo.remove(createIndexName(documentType), documentId))
             .then(() => true);
     }

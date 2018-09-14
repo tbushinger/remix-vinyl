@@ -20,8 +20,12 @@ describe('repo - file.system', function() {
   describe('list', function() {
     it('Should return a DocType List', async function() {
       const result = await repo.list(testModel.schema.type);
-      //console.dir(result, { colors: true });
       assert(result.length != undefined);
+    });
+
+    it('Should return an empty List', async function() {
+      const result = await repo.list('noitems');
+      assert(result.length === 0);
     });
   });
 

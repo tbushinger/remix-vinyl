@@ -8,6 +8,7 @@ const outputFile: any = Promise.promisify(fs.outputFile);
 const readFile: any = Promise.promisify(fs.readFile);
 const unlink: any = Promise.promisify(fs.unlink);
 const readdir: any = Promise.promisify(fs.readdir);
+const exists: any = Promise.promisify(fs.pathExists);
 
 export default class FileRepo implements Repo {    
     rootPath: string;
@@ -38,7 +39,16 @@ export default class FileRepo implements Repo {
     }
 
     list(payloadType: string) : Promise<DocType[]> {
-        return readdir(`${this.rootPath}/${payloadType}`).then((items: string[]) => 
-            Promise.mapSeries(items, item => this.get(payloadType, item.split(/\./)[0])));
+        const sDir: string = `${this.rootPath}/${payloadType}`;
+        return exists(sDir).then((doesExist: boolean) => {
+            if (!doesExist) {
+                return Promise.resolve([]);
+            } else {
+                return readdir(sDir).then((items: string[]) => {
+                    console.log(items)
+                    return Promise.mapSeries(items, item => this.get(payloadType, item.split(/\./)[0]));
+                });
+            }
+        });
     }
 }

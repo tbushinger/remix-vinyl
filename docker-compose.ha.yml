@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  remix-vinyl:
+   environment:
+      DOC_REPO_TYPE: mongodb
+      DOC_REPO_HOST: mongodb
+      DOC_INDEX_TYPE: redis
+      DOC_INDEX_HOST: redis
+      
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - 6379:6379
+
+  mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017

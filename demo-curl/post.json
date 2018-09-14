@@ -1,0 +1,9 @@
+{
+    "head": {
+        "indexedId": 1,
+        "indexedName": "myNameIndex"
+    },
+    "body": {
+        "documentData": "Some Document Data"
+   }
+}

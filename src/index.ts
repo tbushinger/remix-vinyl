@@ -63,7 +63,7 @@ const documentRoutes: DocumentRoutes = createDocumentRoutes(documentService);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(errorHandler());
-app.use(sessionMW(defaultUser));
+app.use(sessionMW({ userId: defaultUser }));
 
 // Setup Routes
 const documentsRouter = express.Router({ mergeParams: true });
@@ -89,10 +89,12 @@ app.use('/documents', documentsRouter);
 const loadSession: Session = { userid: defaultUser };
 let tries: number = parseInt(connectTries);
 let iRetryInterval: number = parseInt(retryInterval);
+let lasterror: any;
 
 function loadIndexes() {
   if (tries === 0) {
-    throw new Error("Failed to connect to data stores and load indexes!")
+    console.log(lasterror);
+    throw new Error("Failed to connect to data stores and load indexes!");
   }
 
   console.log(`Loading indexes . . .`);
@@ -104,7 +106,8 @@ function loadIndexes() {
 
       app.listen(port);
     })
-    .catch(() => {
+    .catch((err) => {
+      lasterror = err;
       tries--;
       console.log("connection not ready!");
       console.log(`Number of retries: ${tries}`);

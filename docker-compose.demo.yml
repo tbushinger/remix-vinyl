@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  remix-vinyl:
+    image: tbushinger/remix-vinyl
+    build: .
+    environment:
+     - DOC_REPO_TYPE=fileSystem
+     - DOC_REPO_DIR=/_data/demo-data
+    volumes:
+     - ${PWD}/demo-curl/_data:/_data
+
+  demo-curl:
+    image: tutum/curl:alpine
+    working_dir: /demo-curl
+    command: sh ./demo-curl.sh
+    volumes:
+     - ${PWD}/demo-curl:/demo-curl

@@ -4,16 +4,24 @@
   "description": "virtaul file/document storage system",
   "main": "index.js",
   "scripts": {
+    "basic:help": "echo these are your standard node build, start, and test commands",
     "start": "node ./dist/index",
     "test": "nyc mocha",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
-    "build-image": "docker build . -t tbushinger/remix-vinyl",
-    "push-image": "docker push tbushinger/remix-vinyl",
-    "test-image": "docker run --name remix-vinyl -p 3000:3000 -d tbushinger/remix-vinyl",
-    "stop-container": "docker stop remix-vinyl",
-    "remove-container": "docker rm remix-vinyl",
-    "cleanup-images": "docker rm `docker ps --no-trunc -aq`"
+    "image:help": "commands for building and pushing the docker images",
+    "image:build": "npm run build-ts && docker build . -t tbushinger/remix-vinyl",
+    "image:push": "docker push tbushinger/remix-vinyl",
+    "docker:help": "commands for docker maintenance",
+    "docker:clean": "docker system prune --volumes -f",
+    "docker:reset": "docker system prune --volumes -a -f",
+    "dev:up": "docker-compose up -d remix-vinyl && docker-compose logs",
+    "ha": "docker-compose -f docker-compose.yml -f docker-compose.ha.yml up -d && docker-compose logs",
+    "ha:down": "docker-compose -f docker-compose.yml -f docker-compose.ha.yml down",
+    "down": "docker-compose down",
+    "_demo_up": "docker-compose -f docker-compose.yml -f docker-compose.demo.yml up -d remix-vinyl",
+    "_demo_run": "docker-compose -f docker-compose.yml -f docker-compose.demo.yml run demo-curl",
+    "demo": "npm run _demo_up && npm run _demo_run && npm run down" 
   },
   "nyc": {
     "include": [
