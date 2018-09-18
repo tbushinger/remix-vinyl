@@ -10,18 +10,22 @@
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "image:help": "commands for building and pushing the docker images",
-    "image:build": "npm run build-ts && docker build . -t tbushinger/remix-vinyl",
+    "image:build": "docker build . -t tbushinger/remix-vinyl",
     "image:push": "docker push tbushinger/remix-vinyl",
     "docker:help": "commands for docker maintenance",
     "docker:clean": "docker system prune --volumes -f",
     "docker:reset": "docker system prune --volumes -a -f",
+    "dev:help": "echo these commands up and down a standalone dev server",
     "dev:up": "docker-compose up -d remix-vinyl && docker-compose logs",
-    "ha": "docker-compose -f docker-compose.yml -f docker-compose.ha.yml up -d && docker-compose logs",
+    "dev:down": "docker-compose down",
+    "ha:help": "echo these commands up and down the application with mongodb for storage and redis for indexing",
+    "ha:up": "docker-compose -f docker-compose.yml -f docker-compose.ha.yml up -d && docker-compose logs",
     "ha:down": "docker-compose -f docker-compose.yml -f docker-compose.ha.yml down",
-    "down": "docker-compose down",
-    "_demo_up": "docker-compose -f docker-compose.yml -f docker-compose.demo.yml up -d remix-vinyl",
-    "_demo_run": "docker-compose -f docker-compose.yml -f docker-compose.demo.yml run demo-curl",
-    "demo": "npm run _demo_up && npm run _demo_run && npm run down" 
+    "demo:help": "echo these commands are use up a file system implementation of the application, run curl requests, and down the application",
+    "demo:down": "docker-compose -f docker-compose.yml -f docker-compose.demo.yml down",
+    "demo:up": "docker-compose -f docker-compose.yml -f docker-compose.demo.yml up -d remix-vinyl",
+    "demo:run": "docker-compose -f docker-compose.yml -f docker-compose.demo.yml run demo-curl",
+    "demo:all": "npm run demo:up && npm run demo:run && npm run demo:down" 
   },
   "nyc": {
     "include": [
